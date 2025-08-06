@@ -19,16 +19,7 @@ The template creates:
 
 ### Using AWS CLI
 
-1. **Deploy without External ID (NOT RECOMMENDED):**
-```bash
-aws cloudformation create-stack \
-  --stack-name metacosm-readonly-role \
-  --template-body file://cross-account-role.yaml \
-  --parameters ParameterKey=TrustedAccountId,ParameterValue={{YOUR-TRUSTED-ACCOUNT-ID}} \
-  --capabilities CAPABILITY_NAMED_IAM
-```
-
-2. **Deploy with External ID (recommended):**
+1. **Deploy with External ID (recommended):**
 ```bash
 aws cloudformation create-stack \
   --stack-name metacosm-readonly-role \
@@ -36,6 +27,15 @@ aws cloudformation create-stack \
   --parameters \
     ParameterKey=TrustedAccountId,ParameterValue={{YOUR-TRUSTED-ACCOUNT-ID}} \
     ParameterKey=ExternalId,ParameterValue={{your-unique-external-id}} \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
+2. **Deploy without External ID (NOT RECOMMENDED):**
+```bash
+aws cloudformation create-stack \
+  --stack-name metacosm-readonly-role \
+  --template-body file://cross-account-role.yaml \
+  --parameters ParameterKey=TrustedAccountId,ParameterValue={{YOUR-TRUSTED-ACCOUNT-ID}} \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
@@ -49,10 +49,6 @@ aws cloudformation create-stack \
 6. Optionally provide an External ID
 7. Review and acknowledge IAM resource creation
 8. Create stack
-
-## Manual Role Creation (Without CloudFormation)
-
-For detailed step-by-step instructions on creating the role manually through the AWS Console, see [console-deployment-guide.md](./console-deployment-guide.md).
 
 ## Stack Management
 
@@ -80,6 +76,10 @@ aws cloudformation describe-stacks \
 
 - **RoleArn**: The ARN of the created role
 - **RoleName**: The name of the created role
+
+## Manual Role Creation (Without CloudFormation)
+
+For detailed step-by-step instructions on creating the role manually through the AWS Console, see [console-deployment-guide.md](./console-deployment-guide.md).
 
 ## Security Considerations
 
