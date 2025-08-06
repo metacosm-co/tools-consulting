@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "IAM Role for cross-account access from Metacosm's security AWS account"
+
+Parameters:
+  TrustedAccountId:
+    Type: String
+    Description: AWS Account ID that will be trusted to assume this role
+    AllowedPattern: '^[0-9]{12}$'
+    ConstraintDescription: 'Must be a valid 12-digit AWS Account ID'
+  
+  ExternalId:
+    Type: String
+    Description: External ID for additional security (optional but recommended)
+    Default: ""
+    NoEcho: true
+    AllowedPattern: '[\w+=,.@:\/-]*'
+    ConstraintDescription: 'ExternalId must contain only alphanumeric characters, underscores, and +=,.@:/- symbols, or be empty'
+
+Conditions:
+  HasExternalId: !Not [!Equals [!Ref ExternalId, ""]]
+
+Resources:
+  CrossAccountRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: MetacosmReadOnlyRole
+      Description: Role that can be assumed from Metacosm AWS account
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${TrustedAccountId}:root"
+            Action: "sts:AssumeRole"
+            Condition: !If
+              - HasExternalId
+              - StringEquals:
+                  "sts:ExternalId": !Ref ExternalId
+              - !Ref AWS::NoValue
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      Tags:
+        - Key: Purpose
+          Value: CrossAccountAccess
+        - Key: ExternalOrganization
+          Value: "Metacosm"
+        - Key: Contact
+          Value: "aws-support@metacosm.co"
+
+Outputs:
+  RoleArn:
+    Description: ARN of the created IAM role
+    Value: !GetAtt CrossAccountRole.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-RoleArn"
+
+  RoleName:
+    Description: Name of the created IAM role
+    Value: !Ref CrossAccountRole
+    Export:
+      Name: !Sub "${AWS::StackName}-RoleName"

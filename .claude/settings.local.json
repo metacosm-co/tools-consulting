@@ -1,0 +1,9 @@
+{
+  "enabledMcpjsonServers": [
+    "linear",
+    "playwright",
+    "perplexity",
+    "docfork",
+    "podman"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "linear": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse"],
+      "env": {}
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "env": {}
+    },
+    "perplexity": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "server-perplexity-ask"],
+      "env": {}
+    },
+    "docfork": {
+      "command": "npx",
+      "args": ["-y", "docfork"]
+    },
+    "podman": {
+      "command": "npx",
+      "args": ["-y", "podman-mcp-server@latest"]
+    }
+  }
+}
